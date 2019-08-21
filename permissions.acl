@@ -17,26 +17,26 @@
  */
 rule EverybodyCanReadEverything {
     description: "Allow all participants read access to all resources"
-    participant: "care.openhealth.mana.SampleParticipant"
+    participant: "care.openhealth.mana.User"
     operation: READ
     resource: "care.openhealth.mana.*"
     action: ALLOW
 }
 
 rule EverybodyCanSubmitTransactions {
-    description: "Allow all participants to submit transactions"
-    participant: "care.openhealth.mana.SampleParticipant"
+    description: "Allow all participants to submit request transactions"
+    participant: "care.openhealth.mana.User"
     operation: CREATE
-    resource: "care.openhealth.mana.SampleTransaction"
+    resource: "care.openhealth.mana.CreateRequest"
     action: ALLOW
 }
 
 rule OwnerHasFullAccessToTheirAssets {
-    description: "Allow all participants full access to their assets"
-    participant(p): "care.openhealth.mana.SampleParticipant"
+    description: "Allow participants full access to their requests"
+    participant(p): "care.openhealth.mana.User"
     operation: ALL
-    resource(r): "care.openhealth.mana.SampleAsset"
-    condition: (r.owner.getIdentifier() === p.getIdentifier())
+    resource(r): "care.openhealth.mana.Request"
+    condition: (r.requester.getIdentifier() === p.getIdentifier())
     action: ALLOW
 }
 

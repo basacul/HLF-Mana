@@ -18,25 +18,38 @@
 
 namespace care.openhealth.mana
 
-participant SampleParticipant identified by participantId {
-  o String participantId
-  o String firstName
-  o String lastName
+participant User identified by manaId {
+  o String manaId
 }
 
-asset SampleAsset identified by assetId {
-  o String assetId
-  --> SampleParticipant owner
-  o String value
+asset Request identified by requestId {
+  o String requestId
+  o String message
+  --> User owner
+  --> User requester
 }
 
-transaction SampleTransaction {
-  --> SampleAsset asset
-  o String newValue
+transaction CreateRequest {
+  --> User owner
+  --> User requester
+  o String message
 }
 
-event SampleEvent {
-  --> SampleAsset asset
-  o String oldValue
-  o String newValue
+event RequestEvent {
+  --> Request request
+  o Boolean approved
 }
+
+// asset Item identified by itemId {
+//   o String itemId
+//   --> User owner
+//   o String link
+// }
+
+
+// transaction Grant {
+//   --> Item item
+//   o String newLink
+// }
+
+
