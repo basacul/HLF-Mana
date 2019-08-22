@@ -20,14 +20,18 @@ namespace care.openhealth.mana
 
 participant User identified by manaId {
   o String manaId
+  o Role role
 }
 
 asset Item identified by itemId {
   o String itemId
-  // unencrypted but allowed only for
+  o String description
+  // unencrypted but allowed only for and need to be verified with permissions and 
+  // Mana web app as user may distribute link with the consent of the owner
   o Role[] roles
   o String link
   // o FileType fileType
+  --> User owner
 }
 
 enum Role {
@@ -36,21 +40,17 @@ enum Role {
   o INSURANCE
 }
 
-// enum FileType {
-//   o IMAGING
-//   o DIAGNOSIS
-//   o RECEIPT
-//   o CONTRACT
-// }
 
-asset Request identified by requestId {
-  o String requestId
+
+asset Association identified by associationId {
+  o String associationId
+  o Boolean approved
   // Messages based on the request if there are some
   // questions based on the files
   o Message[] messages
     // link is encrypted by
   // ((url)privateKeyOwner)publicKeyAuthorizedTo
-  o String link optional
+  o String link default=''
   --> User to
   --> User from
   --> Item item optional
@@ -60,20 +60,54 @@ concept Message {
   o DateTime date 
   o String message
 }
-transaction CreateRequest {
+transaction CreateAssociation {
   --> User to
   --> User from
+  --> Item item optional
   o String message
 }
 
-transaction UpdateRequest {
-  --> Request request
+transaction GrantAssociation {
+  --> Association association
+  o String message
+  o String link
+}
+
+transaction RevokeAssociation {
+  --> Association association
   o String message
 }
 
-event RequestEvent {
-  --> Request request
-  o Boolean approved
+event AssociationCreatedEvent {
+  --> Association association
+}
+
+event AssociationGrantedEvent {
+  --> Association association
+}
+
+event AssociationRevokedEvent {
+  --> Association association
+}
+
+transaction CreateItem {
+  o String description
+  o Role[] roles
+  o String link
+  --> User owner
+}
+
+transaction RemoveItem {
+  --> Item item
+}
+
+event ItemCreatedEvent {
+  --> Item item
+}
+
+event ItemRemovedEvent {
+  o DateTime date
+  o String itemId
 }
 
 // asset Item identified by itemId {

@@ -27,7 +27,7 @@ rule EverybodyCanSubmitTransactions {
     description: "Allow all participants to submit request transactions"
     participant: "care.openhealth.mana.User"
     operation: CREATE
-    resource: "care.openhealth.mana.CreateRequest"
+    resource: "care.openhealth.mana.CreateAssociation"
     action: ALLOW
 }
 
@@ -35,7 +35,7 @@ rule OwnerHasFullAccessToTheirAssets {
     description: "Allow participants full access to their requests"
     participant(p): "care.openhealth.mana.User"
     operation: ALL
-    resource(r): "care.openhealth.mana.Request"
+    resource(r): "care.openhealth.mana.Association"
     condition: (r.requester.getIdentifier() === p.getIdentifier())
     action: ALLOW
 }
