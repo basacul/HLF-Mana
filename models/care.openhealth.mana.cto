@@ -22,16 +22,52 @@ participant User identified by manaId {
   o String manaId
 }
 
-asset Request identified by requestId {
-  o String requestId
-  o String message
-  --> User owner
-  --> User requester
+asset Item identified by itemId {
+  o String itemId
+  // unencrypted but allowed only for
+  o Role[] roles
+  o String link
+  // o FileType fileType
 }
 
+enum Role {
+  o CLIENT
+  o PROVIDER
+  o INSURANCE
+}
+
+// enum FileType {
+//   o IMAGING
+//   o DIAGNOSIS
+//   o RECEIPT
+//   o CONTRACT
+// }
+
+asset Request identified by requestId {
+  o String requestId
+  // Messages based on the request if there are some
+  // questions based on the files
+  o Message[] messages
+    // link is encrypted by
+  // ((url)privateKeyOwner)publicKeyAuthorizedTo
+  o String link optional
+  --> User to
+  --> User from
+  --> Item item optional
+}
+
+concept Message {
+  o DateTime date 
+  o String message
+}
 transaction CreateRequest {
-  --> User owner
-  --> User requester
+  --> User to
+  --> User from
+  o String message
+}
+
+transaction UpdateRequest {
+  --> Request request
   o String message
 }
 
