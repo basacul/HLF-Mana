@@ -50,14 +50,14 @@ asset Association identified by associationId {
   o Message[] messages
     // link is encrypted by
   // ((url)privateKeyOwner)publicKeyAuthorizedTo
-  o String link default=''
+  o String link optional
   --> User to
   --> User from
   --> Item item optional
 }
 
 concept Message {
-  o DateTime date 
+  o DateTime date optional 
   o String message
 }
 transaction CreateAssociation {
@@ -65,6 +65,7 @@ transaction CreateAssociation {
   --> User from
   --> Item item optional
   o String message
+  o String associationId
 }
 
 transaction GrantAssociation {
@@ -79,21 +80,22 @@ transaction RevokeAssociation {
 }
 
 event AssociationCreatedEvent {
-  --> Association association
+  o String associationId
 }
 
 event AssociationGrantedEvent {
-  --> Association association
+  o String associationId
 }
 
 event AssociationRevokedEvent {
-  --> Association association
+  o String associationId
 }
 
 transaction CreateItem {
   o String description
   o Role[] roles
   o String link
+  o String itemId
   --> User owner
 }
 
@@ -102,24 +104,12 @@ transaction RemoveItem {
 }
 
 event ItemCreatedEvent {
-  --> Item item
-}
-
-event ItemRemovedEvent {
-  o DateTime date
   o String itemId
 }
 
-// asset Item identified by itemId {
-//   o String itemId
-//   --> User owner
-//   o String link
-// }
+event ItemRemovedEvent {
+  o String itemId
+}
 
-
-// transaction Grant {
-//   --> Item item
-//   o String newLink
-// }
 
 
