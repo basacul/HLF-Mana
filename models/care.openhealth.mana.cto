@@ -23,14 +23,14 @@ participant User identified by manaId {
   o Role role
 }
 
+/**
+link remains unencrypted to facilitate prototyping
+ */
 asset Item identified by itemId {
   o String itemId
   o String description
-  // unencrypted but allowed only for and need to be verified with permissions and 
-  // Mana web app as user may distribute link with the consent of the owner
-  o Role[] roles
-  o String link
-  // o FileType fileType
+  o Role role
+  o String link 
   --> User owner
 }
 
@@ -41,15 +41,14 @@ enum Role {
 }
 
 
-
+/**
+link remains unencrypted to facilitate prototyping. The user goes 
+to the link and can download the file
+ */
 asset Association identified by associationId {
   o String associationId
   o Boolean approved
-  // Messages based on the request if there are some
-  // questions based on the files
   o Message[] messages
-    // link is encrypted by
-  // ((url)privateKeyOwner)publicKeyAuthorizedTo
   o String link optional
   --> User to
   --> User from
@@ -57,15 +56,23 @@ asset Association identified by associationId {
 }
 
 concept Message {
-  o DateTime date optional 
+  o DateTime date 
   o String message
 }
+
 transaction CreateAssociation {
   --> User to
   --> User from
   --> Item item optional
   o String message
   o String associationId
+}
+
+transaction UpdateAssociation {
+  --> Association association
+  --> Item item optional
+  o String message
+  o String link optional
 }
 
 transaction GrantAssociation {
@@ -83,6 +90,10 @@ event AssociationCreatedEvent {
   o String associationId
 }
 
+event AssociationUpdated {
+  o String associationId
+}
+
 event AssociationGrantedEvent {
   o String associationId
 }
@@ -93,7 +104,7 @@ event AssociationRevokedEvent {
 
 transaction CreateItem {
   o String description
-  o Role[] roles
+  o Role role
   o String link
   o String itemId
   --> User owner

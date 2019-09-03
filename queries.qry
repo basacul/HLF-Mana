@@ -1,0 +1,70 @@
+query selectUser {
+  description: "Select all users"
+  statement:  
+    SELECT  care.openhealth.mana.User
+    ORDER BY [manaId ASC]
+}
+
+query selectUserByRole {
+  description: "Select users with a given role"
+  statement:  
+    SELECT  care.openhealth.mana.User
+    WHERE   (role == _$role)
+}
+
+query selectUserById {
+  description: "Select user with given Id"
+  statement:
+    SELECT  care.openhealth.mana.User
+    WHERE   (manaId == _$id)
+}
+
+query selectItem {
+  description: "Select all items"
+  statement:
+    SELECT  care.openhealth.mana.Item
+    ORDER BY [itemId ASC]
+}
+
+query selectItemById {
+  description: "Select item with a given id"
+  statement:
+    SELECT  care.openhealth.mana.Item
+    WHERE   (itemId == _$id)
+}
+
+query selectItemByRole {
+  description: "Select items for given role"
+  statement:
+    SELECT  care.openhealth.mana.Item
+    WHERE   (role == _$role)
+}
+
+query selectAssociation {
+  description: "Select all associations"
+  statement:
+    SELECT    care.openhealth.mana.Association
+    ORDER BY  [associationId ASC]
+}
+
+query selectAssociationById {
+  description: "Select the association with a given id"
+  statement:
+    SELECT    care.openhealth.mana.Association
+    WHERE     (associationId == _$id)
+}
+
+query selectAssociationApproved {
+  description: "Select all approved associations"
+  statement:
+    SELECT    care.openhealth.mana.Association
+    WHERE     (approved == true)
+}
+
+query selectAssociationNotApproved {
+  description: "Select all NOT approved associations"
+  statement:
+    SELECT    care.openhealth.mana.Association
+    WHERE     (approved == false)
+}
+
