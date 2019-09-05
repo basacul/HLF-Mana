@@ -75,6 +75,10 @@ transaction UpdateAssociation {
   o String link optional
 }
 
+transaction DeleteAssociation {
+  --> Association association
+}
+
 transaction GrantAssociation {
   --> Association association
   o String message
@@ -90,9 +94,13 @@ event AssociationCreatedEvent {
   o String associationId
 }
 
-event AssociationUpdated {
+event AssociationUpdatedEvent {
   o String associationId
 }
+
+event AssociationDeletedEvent {
+  o String associationId
+} 
 
 event AssociationGrantedEvent {
   o String associationId
@@ -110,7 +118,15 @@ transaction CreateItem {
   --> User owner
 }
 
-transaction RemoveItem {
+transaction UpdateItem {
+  --> Item item
+  o String description
+  o Role role optional
+  o String link optional
+  --> User owner optional
+}
+
+transaction DeleteItem {
   --> Item item
 }
 
@@ -118,7 +134,11 @@ event ItemCreatedEvent {
   o String itemId
 }
 
-event ItemRemovedEvent {
+event ItemUpdatedEvent {
+  o String itemId
+}
+
+event ItemDeletedEvent {
   o String itemId
 }
 
