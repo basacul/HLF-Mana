@@ -12,30 +12,65 @@
  * limitations under the License.
  */
 
-/**
- * Sample access control list.
- */
-rule EverybodyCanReadEverything {
-    description: "Allow all participants read access to all resources"
+/*********************************************************************
+ * ASSOCIATION
+ ********************************************************************/
+rule EverybodyCanCreateAssociation {
+    description: "Allow all participants to submit CreateAssociation transactions"
     participant: "care.openhealth.mana.User"
-    operation: READ
-    resource: "care.openhealth.mana.*"
-    action: ALLOW
-}
-
-rule EverybodyCanSubmitTransactions {
-    description: "Allow all participants to submit request transactions"
-    participant: "care.openhealth.mana.User"
-    operation: CREATE
+    operation: CREATE, READ
     resource: "care.openhealth.mana.CreateAssociation"
     action: ALLOW
 }
 
-rule OwnerHasFullAccessToTheirAssets {
-    description: "Allow participants full access to their requests"
+rule ConcernedCanModifyAssociation {
+    description: "Allow concerned participants to perform transactions on Associations that concern them"
+    participant(p): "care.openhealth.mana.User"
+    operation: CREATE, READ, UPDATE
+    resource(r): "care.openhealth.mana.Association"
+    condition:   (r.from.getIdentifier() === p.getIdentifier() || r.to.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+rule OwnereCanDeleteAssociation {
+   description: "Allow concerned participants to perform transactions on Associations that concern them"
+    participant(p): "care.openhealth.mana.User"
+    operation: DELETE
+    resource(r): "care.openhealth.mana.Association"
+    condition:   (r.from.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+/*********************************************************************
+ * ITEM
+ ********************************************************************/
+rule EverybodyCanCreateItem {
+    description: "Allow all participants to submit CreateAssociation transactions"
+    participant: "care.openhealth.mana.User"
+    operation: CREATE, READ
+    resource: "care.openhealth.mana.CreateItem"
+    action: ALLOW
+}
+
+
+rule ConcernedCanModifyItem {
+    description: "Allow concerned participants to perform transactions on their Items"
     participant(p): "care.openhealth.mana.User"
     operation: ALL
-    resource(r): "care.openhealth.mana.Association"
+    resource(r): "care.openhealth.mana.Item"
+    condition:   (r.owner.getIdentifier() === p.getIdentifier())
+    action: ALLOW
+}
+
+
+/*********************************************************************
+ * GENERAL
+ ********************************************************************/
+rule UserHasFullAccessToTheirAssets {
+    description: "Allow participants full access to their requests"
+    participant(p): "care.openhealth.mana.User"
+    operation: CREATE, READ, UPDATE
+    resource(r): "care.openhealth.mana.**"
     condition: (r.requester.getIdentifier() === p.getIdentifier())
     action: ALLOW
 }

@@ -1,15 +1,11 @@
+/*******************************************************************
+* USER QUERIES: selectUser, selectUserById, selectUserByRole
+********************************************************************/
 query selectUser {
   description: "Select all users"
   statement:  
     SELECT  care.openhealth.mana.User
     ORDER BY [manaId ASC]
-}
-
-query selectUserByRole {
-  description: "Select users with a given role"
-  statement:  
-    SELECT  care.openhealth.mana.User
-    WHERE   (role == _$role)
 }
 
 query selectUserById {
@@ -19,11 +15,22 @@ query selectUserById {
     WHERE   (manaId == _$id)
 }
 
-query selectItem {
-  description: "Select all items"
+query selectUserByRole {
+  description: "Select users with a given role"
+  statement:  
+    SELECT  care.openhealth.mana.User
+    WHERE   (role == _$role)
+}
+
+
+/*******************************************************************
+* ITEM QUERIES: selectOwnedItem, selectItemById, selectItemByRole
+********************************************************************/
+query selectOwnedItem {
+  description: "Select all items that are owned by a given user"
   statement:
     SELECT  care.openhealth.mana.Item
-    ORDER BY [itemId ASC]
+    WHERE   (owner == _$owner)
 }
 
 query selectItemById {
@@ -40,10 +47,14 @@ query selectItemByRole {
     WHERE   (role == _$role)
 }
 
-query selectAssociation {
-  description: "Select all associations"
+/*******************************************************************
+* ITEM QUERIES: selectOwnedItem, selectItemById, selectItemByRole
+********************************************************************/
+query selectConcernedAssociation {
+  description: "Select all associations that concern the user"
   statement:
     SELECT    care.openhealth.mana.Association
+    WHERE     (from == _$user OR to == _$user)
     ORDER BY  [associationId ASC]
 }
 
@@ -54,17 +65,18 @@ query selectAssociationById {
     WHERE     (associationId == _$id)
 }
 
-query selectAssociationApproved {
-  description: "Select all approved associations"
-  statement:
-    SELECT    care.openhealth.mana.Association
-    WHERE     (approved == true)
-}
+// DO NOT NEED AS selectConcernedAssociation  and business logic handles this
+// query selectConcernedAssociationApproved {
+//   description: "Select all approved associations"
+//   statement:
+//     SELECT    care.openhealth.mana.Association
+//     WHERE     (approved == true AND from == _$owner OR approved == true AND to == _$owner)
+// }
 
-query selectAssociationNotApproved {
-  description: "Select all NOT approved associations"
-  statement:
-    SELECT    care.openhealth.mana.Association
-    WHERE     (approved == false)
-}
+// query selectConcernedAssociationNotApproved {
+//   description: "Select all NOT approved associations"
+//   statement:
+//     SELECT    care.openhealth.mana.Association
+//     WHERE     (approved == false  AND from == _$owner OR approved == false AND to == _$owner)
+// }
 
