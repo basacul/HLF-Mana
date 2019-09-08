@@ -30,7 +30,7 @@ query selectOwnedItem {
   description: "Select all items that are owned by a given user"
   statement:
     SELECT  care.openhealth.mana.Item
-    WHERE   (owner == _$owner)
+    WHERE   (owner == _$user)
 }
 
 query selectItemById {
@@ -65,18 +65,5 @@ query selectAssociationById {
     WHERE     (associationId == _$id)
 }
 
-// DO NOT NEED AS selectConcernedAssociation  and business logic handles this
-// query selectConcernedAssociationApproved {
-//   description: "Select all approved associations"
-//   statement:
-//     SELECT    care.openhealth.mana.Association
-//     WHERE     (approved == true AND from == _$owner OR approved == true AND to == _$owner)
-// }
 
-// query selectConcernedAssociationNotApproved {
-//   description: "Select all NOT approved associations"
-//   statement:
-//     SELECT    care.openhealth.mana.Association
-//     WHERE     (approved == false  AND from == _$owner OR approved == false AND to == _$owner)
-// }
 
